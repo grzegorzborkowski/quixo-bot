@@ -3,7 +3,6 @@ from Player import *
 import numpy as np
 
 class TestStateMethods(unittest.TestCase):
-
     def test_check_return_border_fields_correctly(self):
         player = Player()
         player.setTypeOfAssignedMark(O_MARK)
@@ -42,5 +41,3 @@ class TestStateMethods(unittest.TestCase):
                     ((4, 3, EMPTY_FIELD), BorderFieldPossibleMoves.BOTTOM_ROW),
                     ((4, 4, X_MARK), BorderFieldPossibleMoves.RIGHT_BOTTOM_CORNER)]
         self.assertSequenceEqual(zipped, expected)
-
-    

@@ -63,7 +63,12 @@ class Player:
         pass
     
     def __findAllPosibleMoves__(self):
-        pass
+        all_possible_border_fields = self.allPossibleBorderFields()
+        for posible_border_field in all_possible_border_fields:
+            position = self.getPositionBasedOnCoordinates(posible_border_field[0], posible_border_field[1])
+            possible_moves_for_position = self.possible_moves[position]
+            for possible_move in possible_moves_for_position:
+                yield (self.mark, posible_border_field[0], posible_border_field[1], possible_move)
 
     def allPossibleBorderFields(self):
         rows, columns = self.gameField.shape[0], self.gameField.shape[1]
