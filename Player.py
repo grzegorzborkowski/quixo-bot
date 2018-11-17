@@ -1,6 +1,7 @@
 import random
 import numpy as np
 from enum import Enum
+from collections import namedtuple
 
 EMPTY_FIELD =  ' '
 O_MARK = 'O'
@@ -10,6 +11,8 @@ PUSH_UP = 'PUSH_UP'
 PUSH_DOWN = 'PUSH_DOWN'
 PUSH_LEFT = 'PUSH_LEFT'
 PUSH_RIGHT = 'PUSH_RIGHT'
+
+Move = namedtuple('Move', ['player_mark', 'x', 'y', 'direction'])
 
 class BorderFieldPossibleMoves(Enum):
     LEFT_TOP_CORNER = 0
@@ -68,7 +71,7 @@ class Player:
             position = self.getPositionBasedOnCoordinates(posible_border_field[0], posible_border_field[1])
             possible_moves_for_position = self.possible_moves[position]
             for possible_move in possible_moves_for_position:
-                yield (self.mark, posible_border_field[0], posible_border_field[1], possible_move)
+                yield Move(self.mark, posible_border_field[0], posible_border_field[1], possible_move)
 
     def allPossibleBorderFields(self):
         rows, columns = self.gameField.shape[0], self.gameField.shape[1]
@@ -95,3 +98,6 @@ class Player:
             return BorderFieldPossibleMoves.LEFT_COLUMN
         else:
             return BorderFieldPossibleMoves.RIGHT_COLUMN
+
+    def simulate_state_after_move(self, current_state, move):
+        pass
