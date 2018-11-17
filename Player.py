@@ -101,13 +101,14 @@ class Player:
 
     def simulate_state_after_move(self, current_state, move):
         x, y, direction = move[1], move[2], move[3]
+        print (x,y, direction)
+        current_state[x][y] = move.player_mark
         if direction == PUSH_RIGHT:
-            current_state[x] = np.roll(current_state[x], shift=1)
+            current_state[y] = np.roll(current_state[y], shift=-1)
         elif direction == PUSH_LEFT:
             current_state[x] = np.roll(current_state[x], shift=1, axis=0)
         elif direction == PUSH_UP:
             current_state[:, y] = np.roll(current_state[:, y], shift=1)
         else:
-            current_state[:, y] = np.roll(current_state[:, y], shift=1, axis=0)
-        current_state[x][y] = move.player_mark
+            current_state[:, y] = np.roll(current_state[:, y], shift=-1, axis=0)
         return current_state
