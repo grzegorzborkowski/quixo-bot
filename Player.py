@@ -73,3 +73,20 @@ class Player:
                     if self.gameField[x][y] == EMPTY_FIELD or self.gameField[x][y] == self.mark:
                         yield (x, y, self.gameField[x][y])
 
+    def getPositionBasedOnCoordinates(self, x, y, x_limit = 4, y_limit = 4):
+        if x == 0 and y == 0:
+            return BorderFieldPossibleMoves.LEFT_TOP_CORNER
+        elif x == x_limit and y == 0:
+            return BorderFieldPossibleMoves.LEFT_BOTTOM_CORNER
+        elif x == 0 and y == y_limit:
+            return BorderFieldPossibleMoves.RIGHT_TOP_CORNER
+        elif x == x_limit and y == y_limit:
+            return BorderFieldPossibleMoves.RIGHT_BOTTOM_CORNER
+        elif x == 0:
+            return BorderFieldPossibleMoves.TOP_ROW
+        elif x == x_limit:
+            return BorderFieldPossibleMoves.BOTTOM_ROW
+        elif y == 0:
+            return BorderFieldPossibleMoves.LEFT_COLUMN
+        else:
+            return BorderFieldPossibleMoves.RIGHT_COLUMN
