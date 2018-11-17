@@ -100,4 +100,13 @@ class Player:
             return BorderFieldPossibleMoves.RIGHT_COLUMN
 
     def simulate_state_after_move(self, current_state, move):
-        pass
+        x, y, direction = move[1], move[2], move[3]
+        if direction == PUSH_RIGHT:
+            current_state[x] = np.roll(current_state[x], shift=1)
+        elif direction == PUSH_LEFT:
+            current_state[x] = np.roll(current_state[x], shift=1, axis=0)
+        elif direction == PUSH_UP:
+            current_state[:, y] = np.roll(current_state[:, y], shift=1)
+        else:
+            current_state[:, y] = np.roll(current_state[:, y], shift=1, axis=0)
+        return current_state

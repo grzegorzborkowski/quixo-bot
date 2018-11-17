@@ -41,3 +41,27 @@ class TestStateMethods(unittest.TestCase):
                     ((4, 3, EMPTY_FIELD), BorderFieldPossibleMoves.BOTTOM_ROW),
                     ((4, 4, X_MARK), BorderFieldPossibleMoves.RIGHT_BOTTOM_CORNER)]
         self.assertSequenceEqual(zipped, expected)
+
+    def test_simulate_state_after_move_push_right(self):
+        player = Player()
+        player.setTypeOfAssignedMark(X_MARK)
+        player.setStateOfGameField(
+           np.array([
+                [' ', ' ', ' ', ' ', 'X'], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' ']]))
+        move = Move(X_MARK, 0, 4, PUSH_LEFT)
+        new_state = player.simulate_state_after_move(player.gameField, move)
+        print (new_state)
+        self.assertTrue(False)
+    
+    def test_simulate_state_after_move_push_left(self):
+        self.assertTrue(False)
+    
+    def test_simulate_state_after_move_push_up(self):
+        self.assertTrue(False)
+
+    def test_simulate_state_after_move_push_down(self):
+        self.assertTrue(False)
