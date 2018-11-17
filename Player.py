@@ -109,4 +109,5 @@ class Player:
             current_state[:, y] = np.roll(current_state[:, y], shift=1)
         else:
             current_state[:, y] = np.roll(current_state[:, y], shift=1, axis=0)
+        current_state[x][y] = move.player_mark
         return current_state

@@ -52,16 +52,76 @@ class TestStateMethods(unittest.TestCase):
                 [' ', ' ', ' ', ' ', ' '], 
                 [' ', ' ', ' ', ' ', ' '], 
                 [' ', ' ', ' ', ' ', ' ']]))
-        move = Move(X_MARK, 0, 4, PUSH_LEFT)
+        move = Move(X_MARK, 0, 0, PUSH_RIGHT)
+
+        expected = np.array([
+                [' ', ' ', ' ', 'X', 'X'], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' ']])
         new_state = player.simulate_state_after_move(player.gameField, move)
-        print (new_state)
-        self.assertTrue(False)
+        self.assertTrue(np.array_equal(expected, new_state))
     
     def test_simulate_state_after_move_push_left(self):
-        self.assertTrue(False)
+        player = Player()
+        player.setTypeOfAssignedMark(X_MARK)
+        player.setStateOfGameField(
+           np.array([
+                [' ', ' ', ' ', ' ', 'X'], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' ']]))
+        move = Move(X_MARK, 0, 4, PUSH_LEFT)
+
+        expected = np.array([
+                ['X', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' ']])
+        new_state = player.simulate_state_after_move(player.gameField, move)
+        self.assertTrue(np.array_equal(expected, new_state))
     
     def test_simulate_state_after_move_push_up(self):
-        self.assertTrue(False)
+        player = Player()
+        player.setTypeOfAssignedMark(X_MARK)
+        player.setStateOfGameField(
+           np.array([
+                [' ', ' ', ' ', ' ', 'X'], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', 'X', ' '], 
+                [' ', ' ', ' ', 'O', ' '], 
+                [' ', ' ', ' ', ' ', ' ']]))
+        move = Move(X_MARK, 3, 3, PUSH_UP)
+
+        expected = np.array([
+                [' ', ' ', ' ', 'X', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', 'X', ' '], 
+                [' ', ' ', ' ', 'O', ' ']])
+        new_state = player.simulate_state_after_move(player.gameField, move)
+        self.assertTrue(np.array_equal(expected, new_state))
 
     def test_simulate_state_after_move_push_down(self):
-        self.assertTrue(False)
+        player = Player()
+        player.setTypeOfAssignedMark(X_MARK)
+        player.setStateOfGameField(
+           np.array([
+                [' ', ' ', ' ', ' ', 'X'], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', 'X', ' '], 
+                [' ', ' ', ' ', 'O', ' '], 
+                [' ', ' ', ' ', ' ', ' ']]))
+        move = Move(X_MARK, 3, 3, PUSH_DOWN)
+
+        expected = np.array([
+                [' ', ' ', ' ', '', ' '], 
+                [' ', ' ', ' ', 'X', ' '], 
+                [' ', ' ', ' ', 'O', ' '], 
+                [' ', ' ', ' ', ' ', ' '], 
+                [' ', ' ', ' ', 'X', ' ']])
+        new_state = player.simulate_state_after_move(player.gameField, move)
+        self.assertTrue(np.array_equal(expected, new_state))
