@@ -1,7 +1,8 @@
-from Player import *
+from AbstractPlayer import *
+from RandomPlayer import *
 
 class GameManager:
-    firstPlayer, secondPlayer = Player(), Player()
+    firstPlayer, secondPlayer = RandomPlayer(), RandomPlayer()
     firstPlayer.setTypeOfAssignedMark(O_MARK), secondPlayer.setTypeOfAssignedMark(X_MARK)
     empty_state = np.array([
                 [' ', ' ', ' ', ' ', ' '], 

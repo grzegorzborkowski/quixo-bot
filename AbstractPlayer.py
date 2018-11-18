@@ -3,6 +3,8 @@ import numpy as np
 from enum import Enum
 from collections import namedtuple
 import random
+from abc import ABC, abstractmethod
+
 
 EMPTY_FIELD =  ' '
 O_MARK = 'O'
@@ -25,7 +27,7 @@ class BorderFieldPossibleMoves(Enum):
     LEFT_COLUMN = 6
     RIGHT_COLUMN = 7
 
-class Player:
+class AbstractPlayer(ABC):
 
     def __init__(self):
         self.max_iteration_number = None
@@ -63,6 +65,7 @@ class Player:
     def setInformationAboutWinning(self, info):
         self.has_won = info
 
+    @abstractmethod
     def makeMove(self):
         possible_moves = list(self.__findAllPosibleMoves__())
         return random.choice(possible_moves)

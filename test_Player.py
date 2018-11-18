@@ -1,10 +1,10 @@
 import unittest
-from Player import *
+from AbstractPlayer import *
 import numpy as np
 
 class TestStateMethods(unittest.TestCase):
     def test_check_return_border_fields_correctly(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(O_MARK)
         player.setStateOfGameField(
            np.array([['X', 'O', ' ', ' ', 'X'], 
@@ -18,7 +18,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertSequenceEqual(border_fields, expected)
 
     def test_get_position_based_on_coordinates(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -43,7 +43,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertSequenceEqual(zipped, expected)
 
     def test_simulate_state_after_move_push_right(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -64,7 +64,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
 
     def test_simulate_state_after_move_push_right_2(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -84,7 +84,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
     
     def test_simulate_state_after_move_push_right_3(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -104,7 +104,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
 
     def test_simulate_state_after_move_push_right_4(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -124,7 +124,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
 
     def test_simulate_state_after_move_push_left(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -145,7 +145,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
 
     def test_simulate_state_after_move_push_left_2(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -166,7 +166,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
 
     def test_simulate_state_after_move_push_left_3(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -187,7 +187,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
 
     def test_simulate_state_after_move_push_up(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -208,7 +208,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
     
     def test_simulate_state_after_move_push_up_2(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -229,7 +229,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
     
     def test_simulate_state_after_move_push_up_3(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -250,7 +250,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
 
     def test_simulate_state_after_move_push_down(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
@@ -271,7 +271,7 @@ class TestStateMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, new_state))
 
     def test_simulate_state_after_move_push_down_2(self):
-        player = Player()
+        player = AbstractPlayer()
         player.setTypeOfAssignedMark(X_MARK)
         player.setStateOfGameField(
            np.array([
