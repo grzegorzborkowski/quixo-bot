@@ -7,7 +7,6 @@ from AbstractPlayer import *
 import math
 from functools import cmp_to_key
 
-
 class MiniMaxPlayer(AbstractPlayer):
 
     def __init__(self):
@@ -45,8 +44,31 @@ class MiniMaxPlayer(AbstractPlayer):
         x_limit = self.gameField.shape[0] 
         y_limit = self.gameField.shape[1]
         result_for_board = 0
-        rows = np.apply_along_axis(self.number_of_mark_on_axis, axis=1, arr=board)
-        columns = np.apply_along_axis(self.number_of_mark_on_axis, axis=0, arr=board)
+    
+        rows = []
+        columns = []
+        x_limit = self.gameField.shape[0] 
+        y_limit = self.gameField.shape[1] 
+        for i in range (0, x_limit):
+            row = board[i]
+            O_MARK_res, X_MARK_res = 0, 0
+            for el in row:
+                if el == O_MARK:
+                    O_MARK_res += 1
+                if el == X_MARK:
+                    X_MARK_res += 1
+            rows.append((O_MARK, X_MARK))
+        
+        for i in range (0, y_limit):
+            column = board[:, i]
+            O_MARK_res, X_MARK_res = 0, 0
+            for el in column:
+                if el == O_MARK:
+                    O_MARK_res += 1
+                if el == X_MARK:
+                    X_MARK_res += 1
+            columns.append((O_MARK, X_MARK))
+        
         for row_result in rows:
             if row_result[0] == x_limit-1: result_for_board -= 50
             elif row_result[0] == x_limit-2: result_for_board -= 20

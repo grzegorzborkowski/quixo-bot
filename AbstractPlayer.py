@@ -191,12 +191,30 @@ class AbstractPlayer(ABC):
         return False
 
     def check_if_player_won_row(self, current_state, mark):
-        result = np.apply_along_axis(self.number_of_mark_on_axis, axis=1, arr=current_state)
-        return self.check_winning_condition_for_axis(result, mark)
+        x_limit = self.gameField.shape[0] 
+        y_limit = self.gameField.shape[1] 
+        for i in range (0, x_limit):
+            column = current_state[i]
+            mark_result = 0
+            for el in column:
+                if el == mark:
+                   mark_result += 1
+            if mark_result == x_limit:
+                return True
+        return False
 
     def check_if_player_won_column(self, current_state, mark):
-        result = np.apply_along_axis(self.number_of_mark_on_axis, axis=0, arr=current_state)
-        return self.check_winning_condition_for_axis(result, mark)
+        x_limit = self.gameField.shape[0] 
+        y_limit = self.gameField.shape[1] 
+        for i in range (0, y_limit):
+            column = current_state[:, i]
+            mark_result = 0
+            for el in column:
+                if el == mark:
+                   mark_result += 1
+            if mark_result == y_limit:
+                return True
+        return False
 
     def check_if_player_won_diagonal(self, current_state, mark):
         x_limit = self.gameField.shape[0]

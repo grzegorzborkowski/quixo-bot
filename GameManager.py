@@ -9,19 +9,19 @@ class GameManager:
     for i in tqdm.tqdm(range(5)):
         firstPlayer, secondPlayer = MiniMaxPlayer(), RandomPlayer()
         firstPlayer.setTypeOfAssignedMark(O_MARK), secondPlayer.setTypeOfAssignedMark(X_MARK)
-        # empty_state = np.array([
-        #            [' ', ' ', ' ', ' ', ' '], 
-        #            [' ', ' ', ' ', ' ', ' '], 
-        #            [' ', ' ', ' ', ' ', ' '], 
-        #            [' ', ' ', ' ', ' ', ' '], 
-        #            [' ', ' ', ' ', ' ', ' ']])
+        empty_state = np.array([
+                   [' ', ' ', ' ', ' ', ' '], 
+                   [' ', ' ', ' ', ' ', ' '], 
+                   [' ', ' ', ' ', ' ', ' '], 
+                   [' ', ' ', ' ', ' ', ' '], 
+                   [' ', ' ', ' ', ' ', ' ']])
         # empty_state = np.array([
         #     [' ', ' '],
         #     [' ', ' ']])
-        empty_state = np.array([
-            [' ', ' ', ' '],
-            [' ', ' ', ' '],
-            [' ', ' ', ' ']])
+        # empty_state = np.array([
+        #     [' ', ' ', ' '],
+        #     [' ', ' ', ' '],
+        #     [' ', ' ', ' ']])
         firstPlayer.setStateOfGameField(empty_state)
         currentPlayer = firstPlayer
         currentState = empty_state
