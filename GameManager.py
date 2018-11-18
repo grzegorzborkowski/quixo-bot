@@ -6,7 +6,7 @@ import tqdm
 
 class GameManager:
     player_won = 0
-    for i in tqdm.tqdm(range(1)):
+    for i in tqdm.tqdm(range(5)):
         firstPlayer, secondPlayer = MiniMaxPlayer(), RandomPlayer()
         firstPlayer.setTypeOfAssignedMark(O_MARK), secondPlayer.setTypeOfAssignedMark(X_MARK)
         # empty_state = np.array([
@@ -40,5 +40,6 @@ class GameManager:
         #print (currentPlayer.gameField)
         if currentPlayer.check_if_player_won(currentState, O_MARK):
             player_won += 1
+        print (currentState)
     print ("player_won", str(player_won))
         

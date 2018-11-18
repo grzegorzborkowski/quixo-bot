@@ -21,6 +21,8 @@ class MiniMaxPlayer(AbstractPlayer):
         bestMove = None
         possible_moves = list(self.__findAllPosibleMoves__())
         possible_moves = self.shuffle_possible_moves(possible_moves, self.gameField)
+        #print (self.gameField)
+        #print (possible_moves)
         for move in possible_moves:
             board = self.simulate_state_after_move(self.gameField, move)
             evaluation = self.minimax(board, 0, False, -1000, 1000)
@@ -61,7 +63,7 @@ class MiniMaxPlayer(AbstractPlayer):
         return False
 
     def shuffle_possible_moves(self, moves, board):
-        moves = sorted(moves, key = cmp_to_key(lambda move1, move2: 1 if board[move1[1]][move1[2]] == EMPTY_FIELD else -1))
+        moves = sorted(moves, key = cmp_to_key(lambda move1, move2: -1 if board[move1[1]][move1[2]] == EMPTY_FIELD else 1))
         return moves
 
     def minimax(self, board, depth, isMaximizingPlayer, alpha, beta):
