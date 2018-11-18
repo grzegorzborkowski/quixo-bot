@@ -264,7 +264,7 @@ class TestStateMethods(unittest.TestCase):
         expected = np.array([
                 [' ', ' ', ' ', ' ', 'X'], 
                 [' ', ' ', ' ', 'X', ' '], 
-                [' ', ' ', ' ', 'O', ' '], 
+                [' ', ' ', ' ', 'O', 'O'], 
                 [' ', ' ', ' ', ' ', ' '], 
                 [' ', ' ', ' ', 'X', ' ']])
         new_state = player.simulate_state_after_move(player.gameField, move)

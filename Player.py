@@ -103,12 +103,37 @@ class Player:
         x, y, direction = move[1], move[2], move[3]
         print (x,y, direction)
         current_state[x][y] = move.player_mark
+        
         if direction == PUSH_RIGHT:
-            current_state[y] = np.roll(current_state[y], shift=-1)
+            if y==0:
+                current_state[x] = np.roll(current_state[x], shift=-1)
+            else:
+                for i in range (y, len(current_state[x])-1):
+                    current_state[x][i] = current_state[x][i+1]
+                current_state[x][len(current_state[x])-1] = move.player_mark
+                
         elif direction == PUSH_LEFT:
-            current_state[x] = np.roll(current_state[x], shift=1, axis=0)
+            if y==len(current_state[x])-1:
+                current_state[x] = np.roll(current_state[x], shift=1)
+            else:
+                for i in reversed(range(1,y+1)):
+                    current_state[x][i] = current_state[x][i-1]
+                current_state[x][0] = move.player_mark
+                
         elif direction == PUSH_UP:
-            current_state[:, y] = np.roll(current_state[:, y], shift=1)
+            if x == len(current_state)-1:
+                 current_state[:, y] = np.roll(current_state[:, y], shift=1)
+            else:
+                for i in reversed(range(1,x+1)):
+                    current_state[i][y] = current_state[i-1][y]
+                current_state[0][y] = move.player_mark
+                
         else:
-            current_state[:, y] = np.roll(current_state[:, y], shift=-1, axis=0)
+            if x == 0:
+                current_state[:, y] = np.roll(current_state[:, y], shift=-1)
+            else:
+                for i in range(x, len(current_state)-1):
+                    current_state[i][y] = current_state[i+1][y]
+                current_state[len(current_state)-1][y] = move.player_mark
+                
         return current_state
