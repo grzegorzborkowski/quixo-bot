@@ -4,7 +4,7 @@ from enum import Enum
 from collections import namedtuple
 import random
 from abc import ABC, abstractmethod
-
+import copy
 
 EMPTY_FIELD =  ' '
 O_MARK = 'O'
@@ -70,7 +70,24 @@ class AbstractPlayer(ABC):
         possible_moves = list(self.__findAllPosibleMoves__())
         return random.choice(possible_moves)
 
-    
+    def __findAllPosibleMovesForGivenBorder__(self, border, mark_to_return):
+        all_possible_border_fields = self.allPossibleBorderFieldsForBorder(border, mark_to_return)
+        for posible_border_field in all_possible_border_fields:
+            position = self.getPositionBasedOnCoordinates(posible_border_field[0], posible_border_field[1])
+            possible_moves_for_position = self.possible_moves[position]
+            for possible_move in possible_moves_for_position:
+                yield Move(mark_to_return, posible_border_field[0], posible_border_field[1], possible_move)
+
+    # REFACTOR
+    def allPossibleBorderFieldsForBorder(self, border, mark_to_return):
+        rows, columns = border.shape[0], border.shape[1]
+        for x in range (rows):
+            for y in range (columns):
+                if x == 0 or y == 0 or x == rows-1 or y == rows-1:
+                    if border[x][y] == EMPTY_FIELD or border[x][y] == mark_to_return:
+                        yield (x, y, border[x][y])
+
+
     def __findAllPosibleMoves__(self):
         all_possible_border_fields = self.allPossibleBorderFields()
         for posible_border_field in all_possible_border_fields:
@@ -87,7 +104,9 @@ class AbstractPlayer(ABC):
                     if self.gameField[x][y] == EMPTY_FIELD or self.gameField[x][y] == self.mark:
                         yield (x, y, self.gameField[x][y])
 
-    def getPositionBasedOnCoordinates(self, x, y, x_limit = 4, y_limit = 4):
+    def getPositionBasedOnCoordinates(self, x, y):
+        x_limit = self.gameField.shape[0]
+        y_limit = self.gameField.shape[1]
         if x == 0 and y == 0:
             return BorderFieldPossibleMoves.LEFT_TOP_CORNER
         elif x == x_limit and y == 0:
@@ -105,8 +124,9 @@ class AbstractPlayer(ABC):
         else:
             return BorderFieldPossibleMoves.RIGHT_COLUMN
 
-    def simulate_state_after_move(self, current_state, move):
+    def simulate_state_after_move(self, board, move):
         x, y, direction = move[1], move[2], move[3]
+        current_state = copy.deepcopy(board)
         current_state[x][y] = move.player_mark
         
         if direction == PUSH_RIGHT:
@@ -163,9 +183,11 @@ class AbstractPlayer(ABC):
     
 
     def check_winning_condition_for_axis(self, rows_or_columns_or_diagonals, mark):
+        x_limit = self.gameField.shape[0] 
+        y_limit = self.gameField.shape[1] 
         for row_result in rows_or_columns_or_diagonals:
-            if mark == X_MARK and row_result[0] == 5: return True
-            elif mark == O_MARK and row_result[1] == 5: return True
+            if mark == X_MARK and row_result[0] == x_limit: return True
+            elif mark == O_MARK and row_result[1] == x_limit: return True
         return False
 
     def check_if_player_won_row(self, current_state, mark):
@@ -177,11 +199,13 @@ class AbstractPlayer(ABC):
         return self.check_winning_condition_for_axis(result, mark)
 
     def check_if_player_won_diagonal(self, current_state, mark):
+        x_limit = self.gameField.shape[0]
+        y_limit = self.gameField.shape[1]
         first_diagonal, second_diagonal = current_state.diagonal(), np.fliplr(current_state).diagonal()
         marks_on_first_diagonal, marks_on_second_diagonal = self.number_of_mark_on_diagonal(first_diagonal), self.number_of_mark_on_diagonal(second_diagonal)
-        if mark == X_MARK and (marks_on_first_diagonal[0] == 5 or marks_on_second_diagonal[0] == 5):
+        if mark == X_MARK and (marks_on_first_diagonal[0] == x_limit or marks_on_second_diagonal[0] == x_limit):
             return True
-        if mark == O_MARK and (marks_on_first_diagonal[1] == 5 or marks_on_second_diagonal[1] == 5):
+        if mark == O_MARK and (marks_on_first_diagonal[1] == x_limit or marks_on_second_diagonal[1] == x_limit):
             return True
         return False
 
