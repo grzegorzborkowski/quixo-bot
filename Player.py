@@ -2,6 +2,7 @@ import random
 import numpy as np
 from enum import Enum
 from collections import namedtuple
+import random
 
 EMPTY_FIELD =  ' '
 O_MARK = 'O'
@@ -63,7 +64,9 @@ class Player:
         self.has_won = info
 
     def makeMove(self):
-        pass
+        possible_moves = list(self.__findAllPosibleMoves__())
+        return random.choice(possible_moves)
+
     
     def __findAllPosibleMoves__(self):
         all_possible_border_fields = self.allPossibleBorderFields()
@@ -178,3 +181,6 @@ class Player:
         if mark == O_MARK and (marks_on_first_diagonal[1] == 5 or marks_on_second_diagonal[1] == 5):
             return True
         return False
+
+    def check_if_player_won(self, current_state, mark):
+        return self.check_if_player_won_column(current_state, mark) or self.check_if_player_won_row(current_state, mark) or self.check_if_player_won_diagonal(current_state, mark)
