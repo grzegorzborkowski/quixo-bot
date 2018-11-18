@@ -101,7 +101,6 @@ class Player:
 
     def simulate_state_after_move(self, current_state, move):
         x, y, direction = move[1], move[2], move[3]
-        print (x,y, direction)
         current_state[x][y] = move.player_mark
         
         if direction == PUSH_RIGHT:
@@ -137,3 +136,45 @@ class Player:
                 current_state[len(current_state)-1][y] = move.player_mark
                 
         return current_state
+
+    def number_of_mark_on_axis(self, axis):
+        number_of_X, number_of_O = 0, 0
+        for x in np.nditer(axis):
+            if x == X_MARK:
+                number_of_X += 1
+            elif x == O_MARK:
+                number_of_O += 1
+        return (number_of_X, number_of_O)
+
+    def number_of_mark_on_diagonal(self, axis):
+        number_of_X, number_of_O = 0, 0
+        for x in axis:
+            if x == X_MARK:
+                number_of_X += 1
+            elif x == O_MARK:
+                number_of_O += 1
+        return (number_of_X, number_of_O)
+    
+
+    def check_winning_condition_for_axis(self, rows_or_columns_or_diagonals, mark):
+        for row_result in rows_or_columns_or_diagonals:
+            if mark == X_MARK and row_result[0] == 5: return True
+            elif mark == O_MARK and row_result[1] == 5: return True
+        return False
+
+    def check_if_player_won_row(self, current_state, mark):
+        result = np.apply_along_axis(self.number_of_mark_on_axis, axis=1, arr=current_state)
+        return self.check_winning_condition_for_axis(result, mark)
+
+    def check_if_player_won_column(self, current_state, mark):
+        result = np.apply_along_axis(self.number_of_mark_on_axis, axis=0, arr=current_state)
+        return self.check_winning_condition_for_axis(result, mark)
+
+    def check_if_player_won_diagonal(self, current_state, mark):
+        first_diagonal, second_diagonal = current_state.diagonal(), np.fliplr(current_state).diagonal()
+        marks_on_first_diagonal, marks_on_second_diagonal = self.number_of_mark_on_diagonal(first_diagonal), self.number_of_mark_on_diagonal(second_diagonal)
+        if mark == X_MARK and (marks_on_first_diagonal[0] == 5 or marks_on_second_diagonal[0] == 5):
+            return True
+        if mark == O_MARK and (marks_on_first_diagonal[1] == 5 or marks_on_second_diagonal[1] == 5):
+            return True
+        return False
