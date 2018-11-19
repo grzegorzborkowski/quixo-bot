@@ -20,8 +20,6 @@ class MiniMaxPlayer(AbstractPlayer):
         bestMove = None
         possible_moves = list(self.__findAllPosibleMoves__())
         possible_moves = self.shuffle_possible_moves(possible_moves, self.gameField)
-        #print (self.gameField)
-        #print (possible_moves)
         for move in possible_moves:
             board = self.simulate_state_after_move(self.gameField, move)
             evaluation = self.minimax(board, 0, False, -1000, 1000)
@@ -33,12 +31,12 @@ class MiniMaxPlayer(AbstractPlayer):
     def evaluate_board(self, board):
         did_i_win = self.check_if_player_won(board, self.mark)
         if did_i_win:
-            return (500, True)
+            return (500, self.mark)
         oponent_mark = X_MARK if self.mark == O_MARK else O_MARK
         did_opponent_win = self.check_if_player_won(board, oponent_mark)
         if did_opponent_win:
-            return (-500, True)
-        return (self.score_for_board(board), False)
+            return (-500, oponent_mark)
+        return (self.score_for_board(board), None)
 
     def score_for_board(self, board):
         x_limit = self.gameField.shape[0] 
@@ -90,8 +88,11 @@ class MiniMaxPlayer(AbstractPlayer):
 
     def minimax(self, board, depth, isMaximizingPlayer, alpha, beta):
         board_value = self.evaluate_board(board)
-        if board_value[1]:
-            return board_value[0]
+        if board_value[1] is not None:
+            if board_value[1] == self.mark: #
+                return board_value[0] - depth*25
+            else:
+                return depth*25 - board_value[0]
         
         if self.is_draw(board):
             return 250
@@ -102,18 +103,12 @@ class MiniMaxPlayer(AbstractPlayer):
         mark = O_MARK if isMaximizingPlayer else X_MARK
         possibleMoves = list(self.__findAllPosibleMovesForGivenBorder__(board, mark))
         possibleMoves = self.shuffle_possible_moves(possibleMoves, board)[:10]
-        ##print (possibleMoves)
-        #print ()
+      
         if isMaximizingPlayer:
             bestValue = -1000
             for move in possibleMoves:
                 new_state = self.simulate_state_after_move(board, move)
-                #print (new_state)
                 value = self.minimax(new_state, depth+1, False, alpha, beta)
-                # print(str(board))
-                # print ("move" + str(move) + " value" + str(value))
-                # print(str(new_state))
-                # print()
                 bestValue = max(bestValue, value)
                 alpha = max(alpha, bestValue)
                 if beta <= alpha:
@@ -123,7 +118,7 @@ class MiniMaxPlayer(AbstractPlayer):
         else:
             bestValue = 1000
             for move in possibleMoves:
-                #move.player_mark = X_MARK
+
                 new_state = self.simulate_state_after_move(board, move)
                 value = self.minimax(new_state, depth+1, True, alpha, beta)
                 bestValue = min(bestValue, value)
