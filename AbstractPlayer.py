@@ -54,7 +54,7 @@ class AbstractPlayer(ABC):
         self.mark = mark
 
     def setStateOfGameField(self, gameField):
-        self.gameField = gameField
+        self.gameField = np.array(gameField)
 
     def setInformationAboutDisqualification(self, info):
         self.is_disqualified = info

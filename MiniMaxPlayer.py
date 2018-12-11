@@ -13,11 +13,9 @@ class Player(AbstractPlayer):
         super().__init__()  
     
     def makeMove(self):
-        print ("called makemove")
         return self.findBestMove()
 
     def findBestMove(self):
-        print ("called findbestmove")
         bestValue = -1000
         bestMove = None
         possible_moves = list(self.__findAllPosibleMoves__())
@@ -105,7 +103,7 @@ class Player(AbstractPlayer):
 
         mark = O_MARK if isMaximizingPlayer else X_MARK
         possibleMoves = list(self.__findAllPosibleMovesForGivenBorder__(board, mark))
-        possibleMoves = self.shuffle_possible_moves(possibleMoves, board)[:10]
+        possibleMoves = self.shuffle_possible_moves(possibleMoves, board)
       
         if isMaximizingPlayer:
             bestValue = -1000

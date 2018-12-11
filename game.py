@@ -11,7 +11,6 @@ LOGS_BOARD = False
 
 def main(names_of_gamers):
     players = create_players(NUMBER_OF_MOVES, names_of_gamers)
-    print ('players', players)
     board = create_empty_board(BOARD_SIZE)
     if LOGS_BOARD:
         print_board(board)
@@ -19,12 +18,9 @@ def main(names_of_gamers):
     game_end = False
     i = 0
     while (i < NUMBER_OF_MOVES) and (game_end == False):
-        print (i)
         for (player, name) in players:
             if game_end == False:
                 move = make_and_apply_player_move(player, board)
-                print ('player', player)
-                print(move)
                 if LOGS_BOARD:
                     print_board(board)
                 (game_end, result) = check_wining_condition(board, BOARD_SIZE, players)
@@ -56,14 +52,10 @@ def print_board(board):
 def make_and_apply_player_move(player, board):
     player.setStateOfGameField(deepcopy(board))
     move = player.makeMove()
-    print (player)
-    print (move)
-    print (board)
     apply_move(board, move)
     return move
 
 def apply_move(board, move):
-    print (move)
     (mark, row, col, push_type) = move
     if push_type not in ['PUSH_DOWN', 'PUSH_UP', 'PUSH_RIGHT', 'PUSH_LEFT']:
         pass
