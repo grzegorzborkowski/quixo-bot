@@ -7,7 +7,7 @@ INPUT_STATE_MARK = ' '
 BOARD_SIZE = 5
 NUMBER_OF_MOVES = 100
 
-LOGS_BOARD = False
+LOGS_BOARD = True
 
 def main(names_of_gamers):
     players = create_players(NUMBER_OF_MOVES, names_of_gamers)
