@@ -5,7 +5,7 @@ from collections import namedtuple
 import random
 from AbstractPlayer import *
 
-class RandomPlayer(AbstractPlayer):
+class Player(AbstractPlayer):
 
     def __init__(self):
         super().__init__()  

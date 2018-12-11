@@ -191,11 +191,9 @@ class AbstractPlayer(ABC):
         return False
 
     def check_if_player_won_row(self, current_state, mark):
-        x_limit = self.gameField.shape[0] 
-        y_limit = self.gameField.shape[1] 
+        x_limit, y_limit = self.gameField.shape[0], self.gameField.shape[1]
         for i in range (0, x_limit):
-            column = current_state[i]
-            mark_result = 0
+            column, mark_result = current_state[i], 0
             for el in column:
                 if el == mark:
                    mark_result += 1
@@ -204,8 +202,7 @@ class AbstractPlayer(ABC):
         return False
 
     def check_if_player_won_column(self, current_state, mark):
-        x_limit = self.gameField.shape[0] 
-        y_limit = self.gameField.shape[1] 
+        x_limit, y_limit = self.gameField.shape[0], self.gameField.shape[1]
         for i in range (0, y_limit):
             column = current_state[:, i]
             mark_result = 0
@@ -229,3 +226,5 @@ class AbstractPlayer(ABC):
 
     def check_if_player_won(self, current_state, mark):
         return self.check_if_player_won_column(current_state, mark) or self.check_if_player_won_row(current_state, mark) or self.check_if_player_won_diagonal(current_state, mark)
+
+
