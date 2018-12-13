@@ -9,6 +9,18 @@ NUMBER_OF_MOVES = 100
 
 LOGS_BOARD = True
 
+PUSH_DOWN = 'PUSH_DOWN'
+PUSH_UP = 'PUSH_UP'
+PUSH_RIGHT = 'PUSH_RIGHT'
+PUSH_LEFT = 'PUSH_LEFT'
+DIRECTIONS = [PUSH_DOWN, PUSH_UP, PUSH_RIGHT, PUSH_LEFT]
+MIN = 0
+MAX = BOARD_SIZE - 1
+LIMITS = [MIN, MAX]
+CORNERS = [(x, y) for x in LIMITS for y in LIMITS]
+SIDES = [(x, y) for x in LIMITS for y in range(MIN + 1, MAX)] + [(x, y) for y in LIMITS for x in range(MIN + 1, MAX)]
+BORDER = CORNERS + SIDES
+
 def main(names_of_gamers):
     players = create_players(NUMBER_OF_MOVES, names_of_gamers)
     board = create_empty_board(BOARD_SIZE)
@@ -16,19 +28,72 @@ def main(names_of_gamers):
         print_board(board)
     result = []
     game_end = False
+    disq = False
     i = 0
     while (i < NUMBER_OF_MOVES) and (game_end == False):
-        for (player, name) in players:
+        for ((player, name), mark) in zip(players, PLAYER_MARKS):
             if game_end == False:
-                move = make_and_apply_player_move(player, board)
+                # Set board in player
+                player.setStateOfGameField(deepcopy(board))
+                # Make move by player
+                move = player.makeMove()
+                print(move)
+                # Check if the move is valid
+                (game_end, result, disq) = check_disqualification(board, players, player, name, mark, move)
+                if disq:
+                    print('EX> Disqualification')
+                    player.setInformationAboutDisqualification(True)
+                else:
+                    player.setInformationAboutDisqualification(False)
+                if disq == False:
+                    apply_move(board, move)
                 if LOGS_BOARD:
                     print_board(board)
-                (game_end, result) = check_wining_condition(board, BOARD_SIZE, players)
+                if game_end == False:
+                    (game_end, result) = check_wining_condition(board, BOARD_SIZE, players)
         i += 1
     if game_end == False:
-        result = [('O', players[0][1], False), ('X', players[1][1], False)]
+        result = [('O', players[0][1], False, False), ('X', players[1][1], False, False)]
         print('EX> Number of iterations exceeded. No one won.')
+    players[0][0].setInformationAboutGameEnd(True)
+    players[1][0].setInformationAboutGameEnd(True)
+    players[0][0].setInformationAboutWinning(result[0][1])
+    players[1][0].setInformationAboutWinning(result[1][1])
     return (result, i)
+
+def _target_coords(x, y, direction):
+    if direction == PUSH_UP:
+        return x, MAX
+    if direction == PUSH_DOWN:
+        return x, MIN
+    if direction == PUSH_LEFT:
+        return MAX, y
+    if direction == PUSH_RIGHT:
+        return MIN, y
+    return None
+
+def _all_moves(mark):
+    return [(mark, x, y, direction) for (x, y) in BORDER for direction in DIRECTIONS]
+
+def _possible_moves(board, players, player, name, mark, move):
+    return [(mark, x, y, direction) for (mark, x, y, direction) in _all_moves(mark) if
+            (x, y) != _target_coords(x, y, direction)]
+
+def _legal_moves(board, players, player, name, mark, move):
+    return [(mark, x, y, direction) for (mark, x, y, direction) in _possible_moves(board, players, player, name, mark, move) if
+            board[y][x] in [INPUT_STATE_MARK, mark]]
+
+def check_disqualification(board, players, player, name, mark, move):
+    print (_legal_moves(board, players, player, name, mark, move))
+    if move in _legal_moves(board, players, player, name, mark, move):
+        return (False, [], False)
+    else:
+        if mark == 'X':
+            finish_game('RES> ' + get_wining_message('O'))
+            return (True, [('O', players[0][1], True, False), ('X', players[1][1], False, True)], True)
+        else:
+            finish_game('RES> ' + get_wining_message('X'))
+            return (True, [('O', players[0][1], False, True), ('X', players[1][1], True, False)], True)
 
 def create_players(number_of_moves, names_of_gamers):
     return [(create_player(number_of_moves, mark, name), name) for mark, name in zip(PLAYER_MARKS, names_of_gamers)]
@@ -49,14 +114,8 @@ def print_board(board):
     for row in board:
         print(row)
 
-def make_and_apply_player_move(player, board):
-    player.setStateOfGameField(deepcopy(board))
-    move = player.makeMove()
-    apply_move(board, move)
-    return move
-
 def apply_move(board, move):
-    (mark, row, col, push_type) = move
+    (mark, col, row, push_type) = move
     if push_type not in ['PUSH_DOWN', 'PUSH_UP', 'PUSH_RIGHT', 'PUSH_LEFT']:
         pass
     if push_type == 'PUSH_DOWN':
@@ -99,13 +158,13 @@ def check_wining_condition(board, board_size, players):
     crosses_won = has_mark_won(board_size, marks_in_rows, marks_in_cols, marks_in_left, marks_in_right, 'X')
     if circles_won and crosses_won:
         finish_game('RES> Players have tied the game!')
-        return (True, [('O', players[0][1], True), ('X', players[1][1], True)])
+        return (True, [('O', players[0][1], True, False), ('X', players[1][1], True, False)])
     if circles_won:
         finish_game('RES> ' + get_wining_message('O'))
-        return (True, [('O', players[0][1], True), ('X', players[1][1], False)])
+        return (True, [('O', players[0][1], True, False), ('X', players[1][1], False, False)])
     if crosses_won:
         finish_game('RES> ' + get_wining_message('X'))
-        return (True, [('O', players[0][1], False), ('X', players[1][1], True)])
+        return (True, [('O', players[0][1], False, False), ('X', players[1][1], True, False)])
     return (False, [])
 
 def count_marks_in_rows_cols_and_diagonals(board_size, board):
@@ -162,7 +221,6 @@ def get_wining_message(mark):
 
 if __name__ == "__main__":
     seed()
-    print(len(argv))
     if len(argv) != 3:
         print("Wellcome to:")
         print("The Fast and Furious 'X' and 'O' game!!")
