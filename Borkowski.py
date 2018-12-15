@@ -12,7 +12,7 @@ EMPTY_FIELD =  ' '
 O_MARK = 'O'
 X_MARK = 'X'
 
-PUSH_UP = 'PUSH_UP' 
+PUSH_UP = 'PUSH_UP'
 PUSH_DOWN = 'PUSH_DOWN'
 PUSH_LEFT = 'PUSH_LEFT'
 PUSH_RIGHT = 'PUSH_RIGHT'
@@ -39,16 +39,16 @@ class AbstractPlayer(ABC):
         self.has_game_ended = None
         self.has_won = None
         self.possible_moves = {
-            BorderFieldPossibleMoves.LEFT_TOP_CORNER : [PUSH_DOWN, PUSH_RIGHT],
-            BorderFieldPossibleMoves.LEFT_BOTTOM_CORNER : [PUSH_UP, PUSH_RIGHT],
-            BorderFieldPossibleMoves.RIGHT_TOP_CORNER : [PUSH_DOWN, PUSH_LEFT],
-            BorderFieldPossibleMoves.RIGHT_BOTTOM_CORNER : [PUSH_UP, PUSH_LEFT],
-            BorderFieldPossibleMoves.TOP_ROW : [PUSH_DOWN, PUSH_LEFT, PUSH_RIGHT],
-            BorderFieldPossibleMoves.BOTTOM_ROW : [PUSH_UP, PUSH_LEFT, PUSH_RIGHT],
-            BorderFieldPossibleMoves.LEFT_COLUMN : [PUSH_UP, PUSH_DOWN, PUSH_RIGHT],
-            BorderFieldPossibleMoves.RIGHT_COLUMN : [PUSH_UP, PUSH_DOWN, PUSH_LEFT]
+            BorderFieldPossibleMoves.LEFT_TOP_CORNER : [PUSH_UP, PUSH_LEFT],
+            BorderFieldPossibleMoves.LEFT_BOTTOM_CORNER : [PUSH_DOWN, PUSH_LEFT],
+            BorderFieldPossibleMoves.RIGHT_TOP_CORNER : [PUSH_UP, PUSH_RIGHT],
+            BorderFieldPossibleMoves.RIGHT_BOTTOM_CORNER : [PUSH_DOWN, PUSH_RIGHT],
+            BorderFieldPossibleMoves.TOP_ROW : [PUSH_UP, PUSH_LEFT, PUSH_RIGHT],
+            BorderFieldPossibleMoves.BOTTOM_ROW : [PUSH_DOWN, PUSH_LEFT, PUSH_RIGHT],
+            BorderFieldPossibleMoves.LEFT_COLUMN : [PUSH_UP, PUSH_DOWN, PUSH_LEFT],
+            BorderFieldPossibleMoves.RIGHT_COLUMN : [PUSH_UP, PUSH_DOWN, PUSH_RIGHT]
         }
-    
+
     def setMaxIterationNumber(self, maxNumber):
         self.max_iteration_number = maxNumber
 
@@ -86,14 +86,14 @@ class AbstractPlayer(ABC):
         for x in range (rows):
             for y in range (columns):
                 if x == 0 or y == 0 or x == rows-1 or y == rows-1:
-                    if border[x][y] == EMPTY_FIELD or border[x][y] == mark_to_return:
-                        yield (x, y, border[x][y])
+                    if border[y][x] == EMPTY_FIELD or border[y][x] == mark_to_return:
+                        yield (x, y, border[y][x])
 
 
     def __findAllPosibleMoves__(self):
         all_possible_border_fields = self.allPossibleBorderFields()
         for posible_border_field in all_possible_border_fields:
-            position = self.getPositionBasedOnCoordinates(posible_border_field[0], posible_border_field[1])
+            position = self.getPositionBasedOnCoordinates(posible_border_field[1], posible_border_field[0])
             possible_moves_for_position = self.possible_moves[position]
             for possible_move in possible_moves_for_position:
                 yield Move(self.mark, posible_border_field[0], posible_border_field[1], possible_move)
@@ -103,34 +103,34 @@ class AbstractPlayer(ABC):
         for x in range (rows):
             for y in range (columns):
                 if x == 0 or y == 0 or x == rows-1 or y == rows-1:
-                    if self.gameField[x][y] == EMPTY_FIELD or self.gameField[x][y] == self.mark:
-                        yield (x, y, self.gameField[x][y])
+                    if self.gameField[y][x] == EMPTY_FIELD or self.gameField[y][x] == self.mark:
+                        yield (x, y, self.gameField[y][x])
 
     def getPositionBasedOnCoordinates(self, x, y):
-        x_limit = self.gameField.shape[0]
-        y_limit = self.gameField.shape[1]
+        x_last = self.gameField.shape[1]-1
+        y_last = self.gameField.shape[0]-1
         if x == 0 and y == 0:
             return BorderFieldPossibleMoves.LEFT_TOP_CORNER
-        elif x == x_limit and y == 0:
+        elif x == x_last and y == 0:
             return BorderFieldPossibleMoves.LEFT_BOTTOM_CORNER
-        elif x == 0 and y == y_limit:
+        elif x == 0 and y == y_last:
             return BorderFieldPossibleMoves.RIGHT_TOP_CORNER
-        elif x == x_limit and y == y_limit:
+        elif x == x_last and y == y_last:
             return BorderFieldPossibleMoves.RIGHT_BOTTOM_CORNER
         elif x == 0:
             return BorderFieldPossibleMoves.TOP_ROW
-        elif x == x_limit:
+        elif x == x_last:
             return BorderFieldPossibleMoves.BOTTOM_ROW
         elif y == 0:
             return BorderFieldPossibleMoves.LEFT_COLUMN
-        else:
+        elif y == y_last:
             return BorderFieldPossibleMoves.RIGHT_COLUMN
 
     def simulate_state_after_move(self, board, move):
         x, y, direction = move[1], move[2], move[3]
         current_state = copy.deepcopy(board)
-        current_state[x][y] = move.player_mark
-        
+        current_state[y][x] = move.player_mark
+
         if direction == PUSH_RIGHT:
             if y==0:
                 current_state[x] = np.roll(current_state[x], shift=-1)
@@ -138,7 +138,7 @@ class AbstractPlayer(ABC):
                 for i in range (y, len(current_state[x])-1):
                     current_state[x][i] = current_state[x][i+1]
                 current_state[x][len(current_state[x])-1] = move.player_mark
-                
+
         elif direction == PUSH_LEFT:
             if y==len(current_state[x])-1:
                 current_state[x] = np.roll(current_state[x], shift=1)
@@ -146,7 +146,7 @@ class AbstractPlayer(ABC):
                 for i in reversed(range(1,y+1)):
                     current_state[x][i] = current_state[x][i-1]
                 current_state[x][0] = move.player_mark
-                
+
         elif direction == PUSH_UP:
             if x == len(current_state)-1:
                  current_state[:, y] = np.roll(current_state[:, y], shift=1)
@@ -154,7 +154,7 @@ class AbstractPlayer(ABC):
                 for i in reversed(range(1,x+1)):
                     current_state[i][y] = current_state[i-1][y]
                 current_state[0][y] = move.player_mark
-                
+
         else:
             if x == 0:
                 current_state[:, y] = np.roll(current_state[:, y], shift=-1)
@@ -162,7 +162,7 @@ class AbstractPlayer(ABC):
                 for i in range(x, len(current_state)-1):
                     current_state[i][y] = current_state[i+1][y]
                 current_state[len(current_state)-1][y] = move.player_mark
-                
+
         return current_state
 
     def number_of_mark_on_axis(self, axis):
@@ -182,11 +182,11 @@ class AbstractPlayer(ABC):
             elif x == O_MARK:
                 number_of_O += 1
         return (number_of_X, number_of_O)
-    
+
 
     def check_winning_condition_for_axis(self, rows_or_columns_or_diagonals, mark):
-        x_limit = self.gameField.shape[0] 
-        y_limit = self.gameField.shape[1] 
+        x_limit = self.gameField.shape[0]
+        y_limit = self.gameField.shape[1]
         for row_result in rows_or_columns_or_diagonals:
             if mark == X_MARK and row_result[0] == x_limit: return True
             elif mark == O_MARK and row_result[1] == x_limit: return True
@@ -233,8 +233,8 @@ class AbstractPlayer(ABC):
 class Player(AbstractPlayer):
 
     def __init__(self):
-        super().__init__()  
-    
+        super().__init__()
+
     def makeMove(self):
         return self.findBestMove()
 
@@ -251,19 +251,19 @@ class Player(AbstractPlayer):
                 bestMove = move
                 bestValue = evaluation
         return bestMove
-    
+
     def evaluate_board(self, board):
         return self.score_for_board(board)
 
     def score_for_board(self, board):
-        x_limit = self.gameField.shape[0] 
+        x_limit = self.gameField.shape[0]
         y_limit = self.gameField.shape[1]
         result_for_board = 0
-    
+
         rows = []
         columns = []
-        x_limit = self.gameField.shape[0] 
-        y_limit = self.gameField.shape[1] 
+        x_limit = self.gameField.shape[0]
+        y_limit = self.gameField.shape[1]
         for i in range (0, x_limit):
             row = board[i]
             O_MARK_res, X_MARK_res = 0, 0
@@ -277,7 +277,7 @@ class Player(AbstractPlayer):
                 if X_MARK_res == y_limit:
                     return (-500, True)
             rows.append((O_MARK, X_MARK))
-        
+
         for i in range (0, y_limit):
             column = board[:, i]
             O_MARK_res, X_MARK_res = 0, 0
@@ -291,7 +291,7 @@ class Player(AbstractPlayer):
                 if X_MARK_res == y_limit:
                     return (-500, True)
             columns.append((O_MARK, X_MARK))
-        
+
         for row_result in rows:
             if row_result[0] == x_limit-1: result_for_board -= 50
             elif row_result[0] == x_limit-2: result_for_board -= 20
@@ -306,7 +306,7 @@ class Player(AbstractPlayer):
 
     def is_draw(self, board):
         return False
- 
+
     def shuffle_possible_moves(self, moves, board):
         moves = sorted(moves, key = cmp_to_key(lambda move1, move2: -1 if board[move1[1]][move1[2]] == EMPTY_FIELD else 1))
         return moves
@@ -318,7 +318,7 @@ class Player(AbstractPlayer):
                 return board_value[0] - depth*25
             else:
                 return depth*25 - board_value[0]
-        
+
         if self.is_draw(board):
             return 250
         if depth > 3:
@@ -333,7 +333,7 @@ class Player(AbstractPlayer):
             mark = X_MARK
         possibleMoves = list(self.__findAllPosibleMovesForGivenBorder__(board, mark))
         possibleMoves = self.shuffle_possible_moves(possibleMoves, board)
-        
+
         if isMaximizingPlayer:
             bestValue = -1000
             for move in possibleMoves:
@@ -344,7 +344,7 @@ class Player(AbstractPlayer):
                 if beta <= alpha:
                     break
             return bestValue
-        
+
         else:
             bestValue = 1000
             for move in possibleMoves:

@@ -7,7 +7,7 @@ INPUT_STATE_MARK = ' '
 BOARD_SIZE = 5
 NUMBER_OF_MOVES = 100
 
-LOGS_BOARD = True
+LOGS_BOARD = False
 
 PUSH_DOWN = 'PUSH_DOWN'
 PUSH_UP = 'PUSH_UP'
@@ -37,7 +37,6 @@ def main(names_of_gamers):
                 player.setStateOfGameField(deepcopy(board))
                 # Make move by player
                 move = player.makeMove()
-                print(move)
                 # Check if the move is valid
                 (game_end, result, disq) = check_disqualification(board, players, player, name, mark, move)
                 if disq:
@@ -84,7 +83,6 @@ def _legal_moves(board, players, player, name, mark, move):
             board[y][x] in [INPUT_STATE_MARK, mark]]
 
 def check_disqualification(board, players, player, name, mark, move):
-    print (_legal_moves(board, players, player, name, mark, move))
     if move in _legal_moves(board, players, player, name, mark, move):
         return (False, [], False)
     else:
