@@ -242,14 +242,17 @@ class Player(AbstractPlayer):
         bestValue = -1000
         bestMove = None
         possible_moves = list(self.__findAllPosibleMoves__())
+        foundAnyMoveWithoutPruning = False
 
         possible_moves = self.shuffle_possible_moves(possible_moves, self.gameField)
+        bestMove = possible_moves[0]
         for move in possible_moves:
             board = self.simulate_state_after_move(self.gameField, move)
             evaluation = self.minimax(board, 0, False, -1000, 1000)
-            if evaluation[1]:
-                return random.choice(possible_moves)
-            if evaluation[0] > bestValue:
+            if evaluation[1] and foundAnyMoveWithoutPruning:
+                bestMove = move
+                bestValue = evaluation[0]
+            elif evaluation[0] > bestValue:
                 bestMove = move
                 bestValue = evaluation[0]
         return bestMove
